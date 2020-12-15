@@ -1,5 +1,8 @@
 function loadContent(root, suffix, currentPage) {
-
+console.log("root: " + root);
+console.log("suffix: " + suffix);
+console.log("curPage: " + currentPage);
+    Get("/rest/ships/uy");
     let objects = JSON.parse(Get(root + "/rest/ships" + suffix).responseText);
     let shipsCount = Get(root + "/rest/ships/count" + suffix).responseText;
     document.getElementById("count").innerText = "Ships found: " + shipsCount;
@@ -73,7 +76,7 @@ function loadContent(root, suffix, currentPage) {
 function Get(requestUrl) {
     let Httpreq = new XMLHttpRequest(); // a new request
     Httpreq.open("GET", requestUrl, false);
-    Httpreq.send(null);
+    Httpreq.send(null)
     if (Httpreq.status === 400) {
         $('#error-text').text("Bad request to GET " + requestUrl);
         $('#myModal').modal('show');
