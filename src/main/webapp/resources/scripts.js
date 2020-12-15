@@ -1,13 +1,12 @@
 function loadContent(root, suffix, currentPage) {
+
     let objects = JSON.parse(Get(root + "/rest/ships" + suffix).responseText);
     let shipsCount = Get(root + "/rest/ships/count" + suffix).responseText;
     document.getElementById("count").innerText = "Ships found: " + shipsCount;
     let table = document.getElementById("mainTable");
     table.innerHTML = "";
     createPaging(document.getElementById("limit").value, shipsCount, currentPage);
-
     for (let i = 0; i < objects.length; i++) {
-
         let tr = document.createElement("tr");
         let th = document.createElement("th");
         th.setAttribute("scope", "row");

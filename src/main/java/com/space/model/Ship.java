@@ -1,10 +1,13 @@
 package com.space.model;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(name = "ship")
+@JsonAutoDetect
 public class Ship {
     @Id
     private long id;
