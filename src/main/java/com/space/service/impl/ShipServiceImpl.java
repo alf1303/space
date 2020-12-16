@@ -28,8 +28,8 @@ public class ShipServiceImpl implements ShipService {
         return shipRepository.findAll();
     }
 
-    public Page<Ship> getAllShipsPaged(Pageable pageData) {
-        return shipRepository.findAll(pageData);
+    public List<Ship> getAllShipsFiltered(Specification<Ship> spec) {
+        return shipRepository.findAll(spec);
     }
 
     public Page<Ship> getAllShipsFilteredPaged(Specification<Ship> spec, Pageable pageData) {

@@ -1,7 +1,7 @@
 function loadContent(root, suffix, currentPage) {
 // console.log("root: " + root);
 // console.log("suffix: " + suffix);
- console.log("curPage: " + currentPage);
+ //processDelete(root, 3);
     //Get("/rest/ships/uy");
     let objects = JSON.parse(Get(root + "/rest/ships" + suffix).responseText);
     let shipsCount = Get(root + "/rest/ships/count" + suffix).responseText;
@@ -74,10 +74,10 @@ function loadContent(root, suffix, currentPage) {
 }
 
 function Get(requestUrl) {
-    console.log("GET requestUrl: " + requestUrl);
     let Httpreq = new XMLHttpRequest(); // a new request
     Httpreq.open("GET", requestUrl, false);
-    Httpreq.send(null)
+    Httpreq.send(null);
+    console.log("*** GET httpReqStatus: " + Httpreq.status);
     if (Httpreq.status === 400) {
         $('#error-text').text("Bad request to GET " + requestUrl);
         $('#myModal').modal('show');
@@ -94,6 +94,7 @@ function post(requestUrl, body) {
     Httpreq.open("POST", requestUrl, false);
     Httpreq.setRequestHeader("Content-type", "application/json;charset=UTF-8");
     Httpreq.send(body);
+    console.log("*** POST httpReqStatus: " + Httpreq.status);
     if (Httpreq.status === 400) {
         $('#error-text').text("Bad request to POST " + requestUrl);
         $('#myModal').modal('show');

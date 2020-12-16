@@ -18,7 +18,6 @@ public class ShipShipType implements Specification<Ship> {
 
     @Override
     public Predicate toPredicate(Root<Ship> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-        //System.out.printf("ShipType: %s%n", shipType);
         if(shipType == null) {
             return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
         }

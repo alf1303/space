@@ -14,7 +14,7 @@ public interface ShipService {
     void deleteShipById(long id);
     void deleteShip(Ship ship);
     Ship getShipById(long id);
-    Page<Ship> getAllShipsPaged(Pageable pageData);
+    List<Ship> getAllShipsFiltered(Specification<Ship> spec);
     Page<Ship> getAllShipsFilteredPaged(Specification<Ship> spec, Pageable pageData);
 
 

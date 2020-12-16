@@ -1,6 +1,7 @@
-package com.space.controller;
+package com.space.controller.exceptions;
 
-import com.space.controller.exceptions.InvalidIdException;
+import com.space.controller.exceptions.InvalidArgException;
+import com.space.controller.exceptions.ShipNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -11,21 +12,20 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
 @ControllerAdvice
 public class ControllerAdvisor  extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler({NoSuchElementException.class})
-    public ResponseEntity<Object> handleShipNotFoundException(NoSuchElementException ex, WebRequest request) {
+    @ExceptionHandler({ShipNotFoundException.class})
+    public ResponseEntity<Object> handleShipNotFoundException(ShipNotFoundException ex, WebRequest request) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("message", "Ship not found");
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({InvalidIdException.class})
-    public ResponseEntity<Object> handleInvalidIdException(InvalidIdException ex, WebRequest request) {
+    @ExceptionHandler({InvalidArgException.class})
+    public ResponseEntity<Object> handleInvalidIdException(InvalidArgException ex, WebRequest request) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("message", "provided id is invalid");
