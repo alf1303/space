@@ -17,7 +17,6 @@ public class ShipIsUsed implements Specification<Ship> {
 
     @Override
     public Predicate toPredicate(Root<Ship> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-        System.out.println("isUsed: " + isUsed);
         Predicate def = criteriaBuilder.isTrue(criteriaBuilder.literal(true));
         try {
             if(isUsed.equals("true"))

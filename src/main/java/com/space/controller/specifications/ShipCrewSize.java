@@ -20,7 +20,6 @@ public class ShipCrewSize implements Specification<Ship> {
 
     @Override
     public Predicate toPredicate(Root<Ship> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-        //System.out.println("min: " + min + ", max: " + max);
         Predicate greater = criteriaBuilder.greaterThanOrEqualTo(root.get("crewSize"), min);
         Predicate less = criteriaBuilder.lessThanOrEqualTo(root.get("crewSize"), max);
         Predicate finalPred = criteriaBuilder.and(greater, less);

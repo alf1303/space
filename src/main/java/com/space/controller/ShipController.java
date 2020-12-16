@@ -1,10 +1,12 @@
 package com.space.controller;
 
-import com.space.controller.exceptions.InvalidIdException;
-import com.space.controller.exceptions.ShipNotFoundException;
 import com.space.model.Ship;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.slf4j.impl.Log4jLoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -18,13 +20,15 @@ public class ShipController {
         this.controller = controller;
     }
 
+    static Logger logger = LogManager.getLogger(ShipController.class);
+
     @GetMapping("/ships")
     List<Ship> getShips(@RequestParam Map<String, String> params) {
-        System.out.println("params: " + params.entrySet());
-        List<Ship> sh = controller.getShips(params);
-        sh.forEach(el -> {
-            System.out.println("name: " + el.getName() + " year: " + el.getProdDate());
-        });
+        logger.info(String.format("GET /ships parameters: %s", params.entrySet()));
+        List<Ship> sh = new ArrayList();
+        sh = controller.getShips(params);
+        logger.info(String.format("List of sended ships, length=%d: ", sh.size()));
+        sh.forEach(el -> logger.info(String.format("  name: %s, planet: %s, prodYear: %s", el.getName(), el.getPlanet(), el.getProdDate())));
         return sh;
     }
 

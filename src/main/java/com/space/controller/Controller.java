@@ -138,9 +138,8 @@ public class Controller {
     private int getPageNumber(String page) {
         int result = 0;
         try {
-            System.out.println(page);
             result = Integer.parseInt(page);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException ignored) {
         }
         return result;
     }
@@ -149,7 +148,7 @@ public class Controller {
         int result = 3;
         try {
             result = Integer.parseInt(size);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException ignored) {
         }
         return result;
     }

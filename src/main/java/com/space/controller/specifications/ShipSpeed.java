@@ -19,7 +19,7 @@ public class ShipSpeed implements Specification<Ship> {
 
     @Override
     public Predicate toPredicate(Root<Ship> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-        System.out.printf("Speed, min: %f, max: %f%n", min, max);
+        //System.out.printf("Speed, min: %f, max: %f%n", min, max);
         Predicate greater = criteriaBuilder.greaterThanOrEqualTo(root.get("speed"), min);
         Predicate less = criteriaBuilder.lessThanOrEqualTo(root.get("speed"), max);
         Predicate finalPred = criteriaBuilder.and(greater, less);
