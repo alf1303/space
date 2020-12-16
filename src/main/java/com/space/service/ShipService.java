@@ -1,6 +1,9 @@
 package com.space.service;
 
 import com.space.model.Ship;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 
@@ -11,6 +14,8 @@ public interface ShipService {
     void deleteShipById(long id);
     void deleteShip(Ship ship);
     Ship getShipById(long id);
+    Page<Ship> getAllShipsPaged(Pageable pageData);
+    Page<Ship> getAllShipsFilteredPaged(Specification<Ship> spec, Pageable pageData);
 
 
 }

@@ -4,6 +4,10 @@ import com.space.model.Ship;
 import com.space.repository.ShipRepository;
 import com.space.service.ShipService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +26,20 @@ public class ShipServiceImpl implements ShipService {
     @Override
     public List<Ship> getAllShips() {
         return shipRepository.findAll();
+    }
+
+    public Page<Ship> getAllShipsPaged(Pageable pageData) {
+        return shipRepository.findAll(pageData);
+    }
+
+    public Page<Ship> getAllShipsFilteredPaged(Specification<Ship> spec, Pageable pageData) {
+        Page<Ship> result = null;
+        try {
+            result =  shipRepository.findAll(spec, pageData);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     @Override
@@ -49,4 +67,6 @@ public class ShipServiceImpl implements ShipService {
         Optional<Ship> sh = shipRepository.findById(id);
         return sh.get();
     }
+
+
 }

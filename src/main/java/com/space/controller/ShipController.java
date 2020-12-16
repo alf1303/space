@@ -21,7 +21,11 @@ public class ShipController {
     @GetMapping("/ships")
     List<Ship> getShips(@RequestParam Map<String, String> params) {
         System.out.println("params: " + params.entrySet());
-        return controller.getShips(params);
+        List<Ship> sh = controller.getShips(params);
+        sh.forEach(el -> {
+            System.out.println("name: " + el.getName() + " year: " + el.getProdDate());
+        });
+        return sh;
     }
 
     @GetMapping("/ships/count")
