@@ -57,12 +57,12 @@ public class Controller {
         String isUsed = params.get(ShipParams.ISUSED.label);
 
         ShipType shipTypeVal = helper.getShipType(shipType);
-        double minSpeedVal = helper.getValidSpeed(minSpeed) == null ? 0.01 : helper.getValidSpeed(minSpeed);
-        double maxSpeedVal = helper.getValidSpeed(minSpeed) == null ? 0.99 : helper.getValidSpeed(maxSpeed);
+        double minSpeedVal = helper.getValidSpeed(minSpeed, false) == null ? 0.01 : helper.getValidSpeed(minSpeed, false);
+        double maxSpeedVal = helper.getValidSpeed(maxSpeed, false) == null ? 0.99 : helper.getValidSpeed(maxSpeed, false);
         double minRatingValue = helper.getRating(minRating) == null ? 0 : helper.getRating(minRating);
         double maxRatingValue = helper.getRating(maxRating) == null ? Double.MAX_VALUE : helper.getRating(maxRating);
-        int minCrewSize = helper.getValidCrewSize(minCrew) == null ? 1 : helper.getValidCrewSize(minCrew);
-        int maxCrewSize = helper.getValidCrewSize(maxCrew) == null ? 9999 : helper.getValidCrewSize(maxCrew);
+        int minCrewSize = helper.getValidCrewSize(minCrew, false) == null ? 1 : helper.getValidCrewSize(minCrew, false);
+        int maxCrewSize = helper.getValidCrewSize(maxCrew, false) == null ? 9999 : helper.getValidCrewSize(maxCrew, false);
 
         return Specification.where(new ShipName(name))
                 .and(new ShipPlanet(planet))
@@ -101,25 +101,48 @@ public class Controller {
 
     public Ship updateShip(String id, UpdateResponseBody json) {
         Ship ship = getShipById(id);
-        String name = helper.getValidName(json.getName());
-        if(name != null) ship.setName(name);
-        String planet = helper.getValidName(json.getPlanet());
-        if(planet != null) ship.setPlanet(planet);
-        ShipType shipType = helper.getShipType(json.getShipType());
-        if(shipType != null) ship.setShipType(shipType);
-        Date prodDate = helper.getValidDate(json.getProdDate());
-        if(prodDate != null) ship.setProdDate(prodDate);
+        Ship updShip = getShipFromParams(json);
+        if(updShip.getName() != null) ship.setName(updShip.getName());
+        if(updShip.getPlanet() != null) ship.setPlanet(updShip.getPlanet());
+        if(updShip.getShipType() != null) ship.setShipType(updShip.getShipType());
+        if(updShip.getProdDate() != null) ship.setProdDate(updShip.getProdDate());
+        Double speed = helper.getValidSpeed(json.getSpeed(), true);
+        if(speed != null) ship.setSpeed(speed);
+        Integer crewSize = helper.getValidCrewSize(json.getCrewSize(), true);
+        if(crewSize != null) ship.setCrewSize(crewSize);
         if(json.getIsUsed() != null) {
             ship.setUsed(json.getIsUsed().equals("true"));
         }
-        Double speed = helper.getValidSpeed(json.getSpeed());
-        if(speed != null) ship.setSpeed(speed);
-        Integer crewSize = helper.getValidCrewSize(json.getCrewSize());
-        if(crewSize != null) ship.setCrewSize(crewSize);
+        double rating = helper.calculateRating(ship);
+        ship.setRating(rating);
         return shipService.updateShip(ship);
     }
 
+    Ship getShipFromParams(UpdateResponseBody json) {
+        Ship ship = new Ship();
+        ship.setName(helper.getValidName(json.getName()));
+        ship.setPlanet(helper.getValidName(json.getPlanet()));
+        ship.setShipType(helper.getShipType(json.getShipType()));
+        ship.setProdDate(helper.getValidDate(json.getProdDate()));
+        return ship;
+    }
 
 
+    public Ship createShip(UpdateResponseBody json) {
+        Ship newShip = getShipFromParams(json);
+        Double speed = helper.getValidSpeed(json.getSpeed(), true);
+        Integer crewSize = helper.getValidCrewSize(json.getCrewSize(), true);
+        if(newShip.getName() == null || newShip.getPlanet() == null || newShip.getProdDate() == null || newShip.getShipType() == null
+        || speed == null || crewSize == null) {
+            throw new InvalidArgException();
+        }
+        newShip.setSpeed(speed);
+        newShip.setCrewSize(crewSize);
+        if(json.getIsUsed() == null || json.getIsUsed().isEmpty()) newShip.setUsed(false);
+        else newShip.setUsed(json.getIsUsed().equals("true"));
+        double rating = helper.calculateRating(newShip);
+        newShip.setRating(rating);
+        return shipService.updateShip(newShip);
+    }
 
 }

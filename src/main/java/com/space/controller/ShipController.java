@@ -9,9 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("rest")
@@ -55,10 +53,20 @@ public class ShipController {
     }
 
     @PostMapping("/ships/{id}")
-    Ship updateShip(@PathVariable String id, @RequestBody UpdateResponseBody json) {
+    ResponseEntity<Ship> updateShip(@PathVariable String id, @RequestBody UpdateResponseBody json) {
         logger.info(String.format("POST Update. id: %s, params: %s", id, json));
+//        UpdateResponseBody upd = new UpdateResponseBody();
+//        upd.setName("TEstName");
+//        upd.setShipType("MILITARY");
+//        upd.setProdDate("32556844329665");
         Ship ship = controller.updateShip(id, json);
-        return ship;
+        return new ResponseEntity<>(ship, HttpStatus.OK);    }
+
+    @PostMapping("ships")
+    ResponseEntity<Ship> createShip(@RequestBody UpdateResponseBody json) {
+        logger.info(String.format("POST Create. params: %s", json));
+        Ship ship = controller.createShip(json);
+        return new ResponseEntity<>(ship, HttpStatus.OK);
     }
 
 }

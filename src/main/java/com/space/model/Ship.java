@@ -10,6 +10,7 @@ import java.util.Date;
 @JsonAutoDetect
 public class Ship {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
     private String planet;

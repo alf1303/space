@@ -15,6 +15,10 @@ public class UpdateResponseBody {
     public UpdateResponseBody() {
     }
 
+    public boolean isEmpty() {
+        return ((name == null && planet == null && shipType == null && prodDate == null && isUsed == null && speed == null && crewSize == null));
+    }
+
     public String getName() {
         return name;
     }

@@ -94,6 +94,7 @@ function post(requestUrl, body) {
     Httpreq.open("POST", requestUrl, false);
     Httpreq.setRequestHeader("Content-type", "application/json;charset=UTF-8");
     Httpreq.send(body);
+    //Httpreq.send("{}");
     console.log("*** POST httpReqStatus: " + Httpreq.status);
     if (Httpreq.status === 400) {
         $('#error-text').text("Bad request to POST " + requestUrl);
