@@ -130,7 +130,7 @@ public class MyHelper {
      */
     public Date getAfterDate(String after) {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(2800, 0, 1, 0, 0, 0);
+        calendar.set(2800, 0, 3, 0, 0, 0);
         return getDate(after, calendar, false);
     }
 
@@ -157,7 +157,7 @@ public class MyHelper {
             long tmp = Long.parseLong(inDate);
             calendar.setTimeInMillis(tmp);
             if (!isBeforeDate) {
-                calendar.set(calendar.get(Calendar.YEAR), 0, 1, 0, 0, 0);
+                calendar.set(calendar.get(Calendar.YEAR), 0, 3, 0, 0, 0);
             } else {
                 calendar.set(calendar.get(Calendar.YEAR), 11, 31, 23, 59, 59);
             }
