@@ -11,19 +11,32 @@ import java.util.Calendar;
 import java.util.Date;
 
 @Component
+    // Contains methods, used for validating and converting values, received from RestController
     public class MyHelper {
 
+    /**
+     * Converts id value from string to int with validation
+     * @param id {@code String}
+     * @return {@code int} valid id number
+     * @throws InvalidArgException if provided value is not positive integer number > 0
+     */
     public long getValidId(String id) {
-        long res_id = -1;
+        long resulId = -1;
         try {
-            res_id = Long.parseLong(id);
+            resulId = Long.parseLong(id);
         } catch (NullPointerException | NumberFormatException e) {
             throw new InvalidArgException();
         }
-        if(res_id <= 0) throw new InvalidArgException();
-        return res_id;
+        if(resulId <= 0) throw new InvalidArgException();
+        return resulId;
     }
 
+    /**
+     * Validates name value
+     * @param name {@code String}
+     * @return {@code String} Input value or null if input is null
+     * @throws InvalidArgException if provided inpu String is empty or length > 50
+     */
     public String getValidName(String name) {
         if(name != null) {
             if(name.isEmpty() || name.length() > 50) {
@@ -47,7 +60,7 @@ import java.util.Date;
         try {
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(Long.parseLong(prodDate));
-            calendar.set(calendar.get(Calendar.YEAR), 0, 1, 0, 0, 0);
+            calendar.set(calendar.get(Calendar.YEAR), Calendar.FEBRUARY, 1, 0, 0, 0);
             result = new Date(calendar.getTimeInMillis());
             Date after = getAfterDate(null);
             Date before = getBeforeDate(null);
@@ -77,6 +90,7 @@ import java.util.Date;
             if(create && (res < 1 || res > 9999)) throw new InvalidArgException();
             else return res;
         } catch (NumberFormatException e) {
+            //e.printStackTrace();
             return null;
         }
     }
@@ -140,7 +154,6 @@ import java.util.Date;
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(prodDate);
         int year = calendar.get(Calendar.YEAR);
-        //double result = (80 * ship.getSpeed() * k) / (3019 - year + 1);
         BigDecimal bd = BigDecimal.valueOf((80 * ship.getSpeed() * k) / (3019 - year + 1));
         bd = bd.setScale(2, RoundingMode.HALF_EVEN);
         return bd.doubleValue();
