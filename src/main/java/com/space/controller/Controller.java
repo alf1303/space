@@ -2,9 +2,9 @@ package com.space.controller;
 
 import com.space.controller.exceptions.InvalidArgException;
 import com.space.controller.exceptions.ShipNotFoundException;
-import com.space.controller.helpers.GetRequestParams;
+import com.space.model.RequestParamsModel;
 import com.space.controller.helpers.MyHelper;
-import com.space.controller.helpers.UpdateResponseBody;
+import com.space.model.RequestBodyModel;
 import com.space.controller.specifications.*;
 import com.space.model.Ship;
 import com.space.model.ShipType;
@@ -26,19 +26,19 @@ public class Controller {
         this.helper = helper;
     }
 
-    List<Ship> getShips(GetRequestParams params) {
+    List<Ship> getShips(RequestParamsModel params) {
         Specification<Ship> spec = getShipSpecification(params);
         Pageable pageData = getPageable(params);
         return shipService.getAllShipsFilteredPaged(spec, pageData).getContent();
     }
 
-    int getShipsCount(GetRequestParams params) {
+    int getShipsCount(RequestParamsModel params) {
         Specification<Ship> spec = getShipSpecification(params);
         List<Ship> ships = shipService.getAllShipsFiltered(spec);
         return ships != null ? ships.size() : 0;
     }
 
-    private Pageable getPageable(GetRequestParams params) {
+    private Pageable getPageable(RequestParamsModel params) {
         String order;
         try {
             order = ShipOrder.valueOf(params.getOrder()).getFieldName();
@@ -51,7 +51,7 @@ public class Controller {
         return PageRequest.of(pageNumber, pageSize, Sort.by(order));
     }
 
-    private Specification<Ship> getShipSpecification(GetRequestParams params) {
+    private Specification<Ship> getShipSpecification(RequestParamsModel params) {
         ShipType shipTypeVal = helper.getShipType(params.getShipType());
         double minSpeedVal = helper.getValidSpeed(params.getMinSpeed(), false) == null ? 0.01 : helper.getValidSpeed(params.getMinSpeed(), false);
         double maxSpeedVal = helper.getValidSpeed(params.getMaxSpeed(), false) == null ? 0.99 : helper.getValidSpeed(params.getMaxSpeed(), false);
@@ -61,14 +61,14 @@ public class Controller {
         int maxCrewSize = helper.getValidCrewSize(params.getMaxCrewSize(), false) == null ? 9999 : helper.getValidCrewSize(params.getMaxCrewSize(), false);
 
         return Specification.where(
-                new ShipName(params.getName()))
-                .and(new ShipPlanet(params.getPlanet()))
-                .and(new ShipDate(helper.getAfterDate(params.getAfter()), helper.getBeforeDate(params.getBefore()))
-                .and(new ShipCrewSize(minCrewSize, maxCrewSize))
-                .and(new ShipSpeed(minSpeedVal, maxSpeedVal))
-                .and(new ShipRating(minRatingValue, maxRatingValue))
-                .and(new ShipShipType(shipTypeVal))
-                .and(new ShipIsUsed(params.getIsUsed())));
+                new ShipNameSpec(params.getName()))
+                .and(new ShipPlanetSpec(params.getPlanet()))
+                .and(new ShipDateSpec(helper.getAfterDate(params.getAfter()), helper.getBeforeDate(params.getBefore()))
+                .and(new ShipCrewSizeSpec(minCrewSize, maxCrewSize))
+                .and(new ShipSpeedSpec(minSpeedVal, maxSpeedVal))
+                .and(new ShipRatingSpec(minRatingValue, maxRatingValue))
+                .and(new ShipShipTypeSpec(shipTypeVal))
+                .and(new ShipIsUsedSpec(params.getIsUsed())));
     }
 
     Ship getShipById(String id) {
@@ -90,14 +90,11 @@ public class Controller {
         shipService.deleteShip(ship);
     }
 
-    public Ship updateShip(String id, UpdateResponseBody shipParams) {
+    public Ship updateShip(String id, RequestBodyModel shipParams) {
         Ship ship = getShipById(id);
-        System.out.println("updDate from DB: " + ship.getProdDate());
         Ship tempShip = getShipFromParams(shipParams);
-        System.out.println("updDate from Request: " + tempShip.getProdDate());
         Double speed = helper.getValidSpeed(shipParams.getSpeed(), true);
         Integer crewSize = helper.getValidCrewSize(shipParams.getCrewSize(), true);
-        double rating = helper.calculateRating(ship);
 
         if(tempShip.getName() != null) ship.setName(tempShip.getName());
         if(tempShip.getPlanet() != null) ship.setPlanet(tempShip.getPlanet());
@@ -108,19 +105,12 @@ public class Controller {
         if(shipParams.getIsUsed() != null) {
             ship.setUsed(shipParams.getIsUsed().equals("true"));
         }
+        double rating = helper.calculateRating(ship);
         ship.setRating(rating);
-        Ship returnShip = shipService.updateShip(ship);
-        System.out.println("updDate after saving: " + returnShip.getProdDate());
-        List<Ship> tmp = shipService.getAllShips();
-        tmp.forEach(e -> {
-            if (e.getName().equals("Orion III")) {
-                System.out.println(e.getName() + ": " + e.getProdDate());
-            }
-        });
-        return returnShip;
+        return shipService.updateShip(ship);
     }
 
-    Ship getShipFromParams(UpdateResponseBody json) {
+    Ship getShipFromParams(RequestBodyModel json) {
         Ship ship = new Ship();
         ship.setName(helper.getValidName(json.getName()));
         ship.setPlanet(helper.getValidName(json.getPlanet()));
@@ -129,7 +119,7 @@ public class Controller {
         return ship;
     }
 
-    public Ship createShip(UpdateResponseBody json) {
+    public Ship createShip(RequestBodyModel json) {
         Ship newShip = getShipFromParams(json);
         Double speed = helper.getValidSpeed(json.getSpeed(), true);
         Integer crewSize = helper.getValidCrewSize(json.getCrewSize(), true);

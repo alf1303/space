@@ -7,12 +7,14 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.sql.Date;
 import java.util.Calendar;
-import java.util.Date;
 
+/** Contains methods, used for validating and converting values,
+ *  received from RestController
+ */
 @Component
-    // Contains methods, used for validating and converting values, received from RestController
-    public class MyHelper {
+public class MyHelper {
 
     /**
      * Converts id value from string to int with validation
@@ -34,8 +36,8 @@ import java.util.Date;
     /**
      * Validates name value
      * @param name {@code String}
-     * @return {@code String} Input value or null if input is null
-     * @throws InvalidArgException if provided inpu String is empty or length > 50
+     * @return {@code String} Input value
+     * @throws InvalidArgException if provided input String is empty or length > 50
      */
     public String getValidName(String name) {
         if(name != null) {
@@ -55,13 +57,16 @@ import java.util.Date;
         }
     }
 
+    /**
+     * Used for converting String with milliseconds, received from page when updating or creating
+     * @param prodDate {@code String}
+     * @return {@code Date} converted value or null
+     * @throws InvalidArgException if provided date is out of needed range
+     */
     public Date getValidDate(String prodDate) {
         Date result = null;
         try {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(Long.parseLong(prodDate));
-            calendar.set(calendar.get(Calendar.YEAR), Calendar.FEBRUARY, 1, 0, 0, 0);
-            result = new Date(calendar.getTimeInMillis());
+            result = new Date(Long.parseLong(prodDate));
             Date after = getAfterDate(null);
             Date before = getBeforeDate(null);
             if(!result.after(after) || !result.before(before)) {
@@ -72,6 +77,13 @@ import java.util.Date;
         return result;
     }
 
+    /**
+     * Used for converting String with speed, received from page
+     * @param inSpeed {@code String} -> input value
+     * @param create {@code boolean} -> true if used for updating or creating ship
+     * @return {@code Double} converted value or null
+     * @throws InvalidArgException if provided speed is out of needed range
+     */
     public Double getValidSpeed(String inSpeed, boolean create) {
         try {
             BigDecimal speed = new BigDecimal(inSpeed);
@@ -84,6 +96,13 @@ import java.util.Date;
         }
     }
 
+    /**
+     * Used for converting String with crewSize, received from page
+     * @param crewSize {@code String} -> input value
+     * @param create {@code boolean} -> true if used for updating or creating ship
+     * @return {@code Double} converted value or null
+     * @throws InvalidArgException if provided crewSize is out of needed range
+     */
     public Integer getValidCrewSize(String crewSize, boolean create) {
         try {
             Integer res = Integer.parseInt(crewSize);
@@ -104,21 +123,38 @@ import java.util.Date;
         }
     }
 
+    /**
+     * Converts input value to Date, or return value, representing lower bound of valid dates range
+     * @param after {@code String} -> input value
+     * @return {@code Date} converted to Date value or lower bound
+     */
     public Date getAfterDate(String after) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(2800, 0, 1, 0, 0, 0);
         return getDate(after, calendar, false);
     }
 
+    /**
+     * Converts input value to Date, or return value, representing upper bound of valid dates range
+     * @param before {@code String} -> input value
+     * @return {@code Date} converted to Date value or upper bound
+     */
     public Date getBeforeDate(String before) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(3019, 11, 31, 23, 59, 59);
         return getDate(before, calendar, true);
     }
 
-    public Date getDate(String before, Calendar calendar, boolean isBeforeDate) {
+    /**
+     * Converts input value to Date, or return value, representing lower bound of valid dates range if input incorrect
+     * @param inDate {@code String} -> input value
+     * @param calendar {@code Calendar} -> default value
+     * @param isBeforeDate {@code boolean} -> if true, set result date to the end of year, else to the beginning
+     * @return {@code Date} converted to Date value or lower/upper bound of valid date range
+     */
+    public Date getDate(String inDate, Calendar calendar, boolean isBeforeDate) {
         try {
-            long tmp = Long.parseLong(before);
+            long tmp = Long.parseLong(inDate);
             calendar.setTimeInMillis(tmp);
             if (!isBeforeDate) {
                 calendar.set(calendar.get(Calendar.YEAR), 0, 1, 0, 0, 0);

@@ -8,21 +8,22 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-public class ShipRating implements Specification<Ship> {
+public class ShipSpeedSpec implements Specification<Ship> {
     private double min;
     private double max;
 
-    public ShipRating(double min, double max) {
+    public ShipSpeedSpec(double min, double max) {
         this.min = min;
         this.max = max;
     }
 
     @Override
     public Predicate toPredicate(Root<Ship> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-        //System.out.printf("Rating. min: %f, max: %f%n", min, max);
-        Predicate greater = criteriaBuilder.greaterThanOrEqualTo(root.get("rating"), min);
-        Predicate less = criteriaBuilder.lessThanOrEqualTo(root.get("rating"), max);
+        //System.out.printf("Speed, min: %f, max: %f%n", min, max);
+        Predicate greater = criteriaBuilder.greaterThanOrEqualTo(root.get("speed"), min);
+        Predicate less = criteriaBuilder.lessThanOrEqualTo(root.get("speed"), max);
         Predicate finalPred = criteriaBuilder.and(greater, less);
+
         return finalPred;
     }
 }

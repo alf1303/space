@@ -1,7 +1,6 @@
 package com.space.controller.specifications;
 
 import com.space.model.Ship;
-import com.space.model.ShipType;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -9,20 +8,19 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-public class ShipShipType implements Specification<Ship> {
-    ShipType shipType;
+public class ShipPlanetSpec implements Specification<Ship> {
+    private final String planet;
 
-    public ShipShipType(ShipType shipType) {
-        this.shipType = shipType;
+    public ShipPlanetSpec(String planet) {
+        this.planet = planet;
     }
 
     @Override
     public Predicate toPredicate(Root<Ship> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-        if(shipType == null) {
+        if(planet == null) {
             return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
         }
-        else {
-            return criteriaBuilder.equal(root.get("shipType"), shipType);
-        }
+        return criteriaBuilder.like(root.get("planet"), "%" + this.planet + "%");
     }
 }
+

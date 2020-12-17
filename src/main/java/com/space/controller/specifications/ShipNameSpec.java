@@ -8,10 +8,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-public class ShipName implements Specification<Ship> {
-    private String name;
+public class ShipNameSpec implements Specification<Ship> {
+    private final String name;
 
-    public ShipName(String name) {
+    public ShipNameSpec(String name) {
         this.name = name;
     }
 

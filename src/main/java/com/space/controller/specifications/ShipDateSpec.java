@@ -7,13 +7,13 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.util.Date;
+import java.sql.Date;
 
-public class ShipDate implements Specification<Ship> {
-    private Date after;
-    private Date before;
+public class ShipDateSpec implements Specification<Ship> {
+    private final Date after;
+    private final Date before;
 
-    public ShipDate(Date after, Date before) {
+    public ShipDateSpec(Date after, Date before) {
         this.after = after;
         this.before = before;
     }

@@ -1,9 +1,9 @@
-package com.space.controller.helpers;
+package com.space.model;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
 @JsonAutoDetect
-public class GetRequestParams {
+public class RequestParamsModel {
     String name;
     String planet;
     String shipType;
@@ -20,7 +20,7 @@ public class GetRequestParams {
     String pageNumber;
     String pageSize;
 
-    public GetRequestParams() {
+    public RequestParamsModel() {
     }
 
     public String getOrder() {

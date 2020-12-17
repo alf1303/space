@@ -8,10 +8,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-public class ShipIsUsed implements Specification<Ship> {
-    String isUsed;
+public class ShipIsUsedSpec implements Specification<Ship> {
+    private final String isUsed;
 
-    public ShipIsUsed(String isUsed) {
+    public ShipIsUsedSpec(String isUsed) {
         this.isUsed = isUsed;
     }
 

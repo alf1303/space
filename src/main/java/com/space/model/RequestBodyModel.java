@@ -1,9 +1,9 @@
-package com.space.controller.helpers;
+package com.space.model;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
 @JsonAutoDetect
-public class UpdateResponseBody {
+public class RequestBodyModel {
     String name;
     String planet;
     String shipType;
@@ -12,7 +12,7 @@ public class UpdateResponseBody {
     String speed;
     String crewSize;
 
-    public UpdateResponseBody() {
+    public RequestBodyModel() {
     }
 
     public boolean isEmpty() {

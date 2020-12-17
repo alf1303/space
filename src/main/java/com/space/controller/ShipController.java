@@ -1,7 +1,7 @@
 package com.space.controller;
 
-import com.space.controller.helpers.GetRequestParams;
-import com.space.controller.helpers.UpdateResponseBody;
+import com.space.model.RequestParamsModel;
+import com.space.model.RequestBodyModel;
 import com.space.model.Ship;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -24,13 +24,16 @@ public class ShipController {
     static Logger logger = LogManager.getLogger(ShipController.class);
 
     @GetMapping("/ships")
-    public List<Ship> getShips(GetRequestParams params) {
+    public List<Ship> getShips(RequestParamsModel params) {
         logger.info(String.format("GET /ships parameters: %s", params.toString()));
-        return controller.getShips(params);
+        List<Ship> result = controller.getShips(params);
+        logger.info("result ship list: ");
+        result.forEach(e -> logger.info(String.format("name: %s, date: %s", e.getName(), e.getProdDate())));
+        return result;
     }
 
     @GetMapping("/ships/count")
-    public int getShipsCount(GetRequestParams params) {
+    public int getShipsCount(RequestParamsModel params) {
         return controller.getShipsCount(params);
     }
 
@@ -46,14 +49,14 @@ public class ShipController {
     }
 
     @PostMapping("/ships/{id}")
-    public ResponseEntity<Ship> updateShip(@PathVariable String id, @RequestBody UpdateResponseBody json) {
+    public ResponseEntity<Ship> updateShip(@PathVariable String id, @RequestBody RequestBodyModel json) {
         logger.info(String.format("POST Update. id: %s, params: %s", id, json));
-        Ship ship = null;
-            ship = controller.updateShip(id, json);
-        return new ResponseEntity<>(ship, HttpStatus.OK);    }
+        Ship ship = controller.updateShip(id, json);
+        return new ResponseEntity<>(ship, HttpStatus.OK);
+    }
 
     @PostMapping("ships")
-    public ResponseEntity<Ship> createShip(@RequestBody UpdateResponseBody json) {
+    public ResponseEntity<Ship> createShip(@RequestBody RequestBodyModel json) {
         logger.info(String.format("POST Create. params: %s", json));
         Ship ship = controller.createShip(json);
         return new ResponseEntity<>(ship, HttpStatus.OK);

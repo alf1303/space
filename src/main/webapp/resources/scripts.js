@@ -1,8 +1,4 @@
 function loadContent(root, suffix, currentPage) {
-// console.log("root: " + root);
-// console.log("suffix: " + suffix);
- //processDelete(root, 3);
-    //Get("/rest/ships/uy");
     let objects = JSON.parse(Get(root + "/rest/ships" + suffix).responseText);
     let shipsCount = Get(root + "/rest/ships/count" + suffix).responseText;
     document.getElementById("count").innerText = "Ships found: " + shipsCount;
